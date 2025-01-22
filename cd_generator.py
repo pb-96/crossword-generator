@@ -1,7 +1,8 @@
 from typing import List, Tuple, Optional, Dict, Any
 from collections import OrderedDict, defaultdict
-from random import randint
+from random import randint, choice
 from functools import lru_cache
+import string
 
 ALL_DIRECTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -138,8 +139,17 @@ class CrossWordGen:
                 this_word[word].append(indexes)
             lst_added[word] = this_word
 
-        for row, col in self.available_start_points:
-            self.cw_matrix[row][col] = chr(randint(97, 96 + 26))
+        # Instead of generating random letters in each iteration, pre-generate them
+        random_letters = [
+            choice(string.ascii_lowercase)
+            for _ in range(len(self.available_start_points))
+        ]
+
+        # Fill remaining positions with random letters from the pre-generated list
+        for (row, col), random_letter in zip(
+            self.available_start_points, random_letters
+        ):
+            self.cw_matrix[row][col] = random_letter
 
         return self.cw_matrix
 
