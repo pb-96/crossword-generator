@@ -1,6 +1,7 @@
 from typing import List, Tuple, Optional, Dict, Any
 from collections import OrderedDict, defaultdict
 from random import randint
+from functools import lru_cache
 
 ALL_DIRECTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -40,6 +41,7 @@ class CrossWordGen:
             random_start = given_keys[ptr]
         return None
 
+    @lru_cache(maxsize=None)
     def search_chunk(self, word: str, direction: Tuple[int, int], pos: Tuple[int, int]):
         r, c = pos
         for _ in range(len(word)):
