@@ -64,7 +64,7 @@ class CrossWordGen:
         direction: Tuple[int, int],
         word_index: int,
     ) -> Optional[Tuple[int, int]]:
-        
+
         row_step, col_step = direction
         word_len = len(word) - 1
         left, right = word[:word_index], word[word_index:word_len]
@@ -100,7 +100,7 @@ class CrossWordGen:
         self, word: str, last_added: OrderedDict[str, Dict]
     ) -> Optional[Tuple]:
         if not last_added:
-            return (0, 0), (1, 1)
+            return self.place_randomly(word)
 
         joint = self.compare_to_last_added(last_added, word)
         if joint is not None:
@@ -150,13 +150,14 @@ if __name__ == "__main__":
         "clojure",
         "elixir",
         "ecmascript",
-        'lansdownerugby',
+        "lansdownerfc",
         "rust",
         "java",
         "lua",
         "lisp",
         "ruby",
     ]
+
     matrix = CrossWordGen(words=to_place)
     for _line in matrix:
         print(_line)
