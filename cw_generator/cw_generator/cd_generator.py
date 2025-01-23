@@ -139,13 +139,11 @@ class CrossWordGen:
                 this_word[word].append(indexes)
             lst_added[word] = this_word
 
-        # Instead of generating random letters in each iteration, pre-generate them
         random_letters = [
             choice(string.ascii_lowercase)
             for _ in range(len(self.available_start_points))
         ]
 
-        # Fill remaining positions with random letters from the pre-generated list
         for (row, col), random_letter in zip(
             self.available_start_points, random_letters
         ):
