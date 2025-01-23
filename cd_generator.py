@@ -4,7 +4,7 @@ from random import randint, choice
 from functools import lru_cache
 import string
 
-ALL_DIRECTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
+ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
 
 class CrossWordGen:
