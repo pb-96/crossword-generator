@@ -1,8 +1,6 @@
-from fastapi import FastAPI
+import sqlalchemy
 
-app = FastAPI()
+cw_table = sqlalchemy.Table(
+    "table_record"
+)
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
