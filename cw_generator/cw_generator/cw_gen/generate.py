@@ -1,9 +1,9 @@
-from cw_generator.cw_generator.cd_generator import CrossWordGen
-from cw_generator.cw_generator.cd_validator import WordSearch, Point
+from cw_generator.cw_generator.cw_gen.cd_generator import CrossWordGen
+from cw_generator.cw_generator.cw_gen.cd_validator import WordSearch, Point
 from typing import List, Dict, Tuple, cast
 
 
-def main(to_place: List[str]) -> Dict[str, Tuple]:
+def generate(to_place: List[str]) -> Dict[str, Tuple]:
     cross_word_cls = CrossWordGen(to_place)
     searcher = WordSearch(puzzle=cross_word_cls.cw_matrix)
 
