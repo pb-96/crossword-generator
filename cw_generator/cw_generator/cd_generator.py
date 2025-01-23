@@ -156,21 +156,3 @@ class CrossWordGen:
     def __iter__(self):
         for line in self.cw_matrix:
             yield line
-
-
-if __name__ == "__main__":
-    to_place = [
-        "clojure",
-        "elixir",
-        "ecmascript",
-        "lansdownerfc",
-        "rust",
-        "java",
-        "lua",
-        "lisp",
-        "ruby",
-    ]
-
-    matrix = CrossWordGen(words=to_place)
-    for _line in matrix:
-        print(_line)
