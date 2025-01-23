@@ -1,5 +1,5 @@
-from cw_generator.cw_generator.cw_gen.cd_generator import CrossWordGen
-from cw_generator.cw_generator.cw_gen.cd_validator import WordSearch, Point
+from cw_generator.cw_generator.cw_gen.cw_generator import CrossWordGen
+from cw_generator.cw_generator.cw_gen.cw_validator import WordSearch, Point
 from typing import List, Dict, Tuple, cast
 
 
