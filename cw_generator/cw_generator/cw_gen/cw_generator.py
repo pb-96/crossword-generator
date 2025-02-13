@@ -14,6 +14,7 @@ class CrossWordGen:
         self,
         words: List[str],
         dimensions: int = 15,
+        retry_un_added: bool = False
     ):
         self.cw_matrix = [[] for _ in range(dimensions)]
         self.available_start_points = OrderedDict()
@@ -25,6 +26,9 @@ class CrossWordGen:
         self.words = sorted(words, key=len, reverse=True)
         directions = ALL_DIRECTIONS
         self.directions = directions
+        # Exclude these a from testing suite
+        self.un_added_words = []
+        self.re_try_un_added = retry_un_added
         self.build_cw()
 
     def place_randomly(self, word: str) -> Optional[Tuple]:
