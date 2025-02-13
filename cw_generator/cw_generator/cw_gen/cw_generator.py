@@ -119,6 +119,7 @@ class CrossWordGen:
         for word in self.words:
             T = self.check_valid_placement(word, lst_added)
             if T is None:
+                # This is where invalid words would be registered
                 continue
 
             initial_placement, given_direction = T
