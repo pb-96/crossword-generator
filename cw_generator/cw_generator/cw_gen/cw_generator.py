@@ -3,6 +3,7 @@ from collections import OrderedDict, defaultdict
 from random import randint, choice
 from functools import lru_cache
 import string
+import warnings
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -124,6 +125,8 @@ class CrossWordGen:
             T = self.check_valid_placement(word, lst_added)
             if T is None:
                 # This is where invalid words would be registered
+                self.un_added_words(word)
+                warnings.warn(f"could not add word to matrix: {word}")
                 continue
 
             initial_placement, given_direction = T
