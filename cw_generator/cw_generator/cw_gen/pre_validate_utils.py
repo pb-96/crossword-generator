@@ -1,5 +1,6 @@
 from typing import List, Tuple, TypedDict
 from enum import Enum
+from collections import deque, defaultdict
 
 class ReplaceStrategy(Enum):
     # Replace from smallest and find words with fit in given space
@@ -46,9 +47,10 @@ def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]
     cut_off = diff_dict["cut_off_index"]
     diff = diff_dict["diff"]
     pad_remaining = words[cut_off + 1: ]
-    pad_remaining.sort(key=len)
-    pad_remaining = [word for word in pad_remaining if word <= diff]
-
+    by_size = defaultdict(list)
+    for word in (word for word in pad_remaining if word <= diff):
+        by_size[len(word)].append(word)
+    
 
 
 def replace_strategy():
