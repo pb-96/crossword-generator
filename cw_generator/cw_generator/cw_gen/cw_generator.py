@@ -12,10 +12,7 @@ class CrossWordGen:
     slots = ["cw_matrix"]
 
     def __init__(
-        self,
-        words: List[str],
-        dimensions: int = 15,
-        retry_un_added: bool = False
+        self, words: List[str], dimensions: int = 15, retry_un_added: bool = False
     ):
         self.cw_matrix = [[] for _ in range(dimensions)]
         self.available_start_points = OrderedDict()

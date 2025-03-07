@@ -14,8 +14,9 @@ def repeat_every_day(hour: int, minute: int, second: int):
     def decorator_func(func):
         @wraps(func)
         def time_wrapper(*args, **kwargs):
-            
+
             func(args, kwargs)
+
         time_wrapper.next_send = None
         return time_wrapper
 

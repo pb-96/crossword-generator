@@ -8,6 +8,7 @@ def alter_input(cw: CrossWordGen, in_place: List[str]) -> None:
     if cw.re_try_un_added and cw.un_added_words:
         in_place = [*set(cw.un_added_words).difference(set(in_place))]
 
+
 class GeneratorTest(unittest.TestCase):
     def test_base_case(self):
         to_place = [
@@ -26,6 +27,5 @@ class GeneratorTest(unittest.TestCase):
         validator = WordSearch(puzzle=cw.cw_matrix)
         all_found = all((validator.search(word) for word in to_place))
         assert all_found
-    
-    def test_on_to_retry(self):
-        ...
+
+    def test_on_to_retry(self): ...

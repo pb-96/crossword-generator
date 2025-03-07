@@ -6,6 +6,4 @@ app = FastAPI()
 
 
 @repeat_every_day(hour=23, minute=0, second=0)
-def generate_crossword():
-    ...
-
+def generate_crossword(): ...
