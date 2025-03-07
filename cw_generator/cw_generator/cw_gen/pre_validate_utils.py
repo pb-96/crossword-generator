@@ -42,7 +42,6 @@ def check_can_fit(dim: int , words: List[str]) -> CanFit:
     return return_dict
     
 
-
 def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]:
     cut_off = diff_dict["cut_off_index"]
     diff = diff_dict["diff"]
