@@ -30,19 +30,27 @@ def check_can_fit(dim: int, words: List[str]) -> CanFit:
     cutoff_index = -1
 
     if no_fit:
+        # Maybe best to pre sort so it can be easily adjusted by the config management
         words.sort(key=len)
         count = 0
-           
+        for index, word in enumerate(words):
+            if count + len(word) > total_space:
+                break
+            count += len(word)
+        cutoff_index = index
 
     return_dict: CanFit = {
         "no_fit": no_fit,
         "diff": diff,
-        "cut_off_index": cutoff_index,
+        "cut_off_index": cutoff_index
     }
+
     return return_dict
 
 
-def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]: ...
+def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]:
+    cut_off = diff_dict["cut_off_index"]
+    return words[: cut_off], words[cut_off + 1: ]
 
 
 def replace_strategy(): ...
