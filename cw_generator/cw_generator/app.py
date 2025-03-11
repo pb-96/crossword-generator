@@ -13,7 +13,10 @@ app = FastAPI()
 def generate_crossword(): ...
 
 
-app.route("get-current-cw")
+app.route("get-current-cw/{client-timestamp}")
 
 
-def get_current_cw(): ...
+def get_current_cw(client_timestamp: str):
+    # Convert client timestamp to datetime object
+
+    ...
