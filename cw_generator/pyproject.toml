@@ -11,6 +11,7 @@ pytest = "^8.3.4"
 fastapi = "^0.115.7"
 fastapi-utilities = "^0.3.0"
 black = "^25.1.0"
+sqlalchemy = "^2.0.38"
 
 
 [build-system]
