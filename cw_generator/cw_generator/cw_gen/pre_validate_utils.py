@@ -51,9 +51,7 @@ def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]
     return words[:cut_off], words[cut_off + 1 :]
 
 
-def fit_words(
-    words: List[str], replace_strategy: str
-) -> Tuple[List[str], List[str]]:
+def fit_words(words: List[str], replace_strategy: str) -> Tuple[List[str], List[str]]:
     words.sort(key=len, reverse=replace_strategy == ReplaceStrategy.sort_rl.value)
     diff_dict = check_can_fit(len(words), words)
     fitted_words = chop_ordered_words(words, diff_dict)
