@@ -27,6 +27,32 @@ class GeneratorBase:
         self.re_try_un_added = retry_un_added
         self.build_cw()
         self.pad_random_letters()
+        
+    def can_fit_word(
+        self,
+        word: str,
+        start_pos: Tuple[int, int],
+        direction: Tuple[int, int],
+        word_index: int,
+    ) -> Optional[Tuple[int, int]]:
+
+        row_step, col_step = direction
+        word_len = len(word) - 1
+        left, right = word[:word_index], word[word_index:word_len]
+        opposite_direction = (-row_step, -col_step)
+
+        R = self.search_chunk(right, direction, tuple(start_pos))
+        if R is None:
+            return None
+
+        _, direction = R
+        L = self.search_chunk(left, opposite_direction, tuple(start_pos))
+
+        if L is None:
+            return None
+
+        start, _ = L
+        return start, R[1]
 
     def place_randomly(self, word: str) -> Optional[Tuple]:
         random_index = randint(0, len(self.available_start_points))
@@ -80,4 +106,3 @@ class GeneratorBase:
         for line in self.cw_matrix:
             yield line
 
-    

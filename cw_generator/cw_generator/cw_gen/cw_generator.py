@@ -8,32 +8,6 @@ from cw_generator.cw_gen.cw_base_class import GeneratorBase
 
 
 class CrossWordGen(GeneratorBase):
-    def can_fit_word(
-        self,
-        word: str,
-        start_pos: Tuple[int, int],
-        direction: Tuple[int, int],
-        word_index: int,
-    ) -> Optional[Tuple[int, int]]:
-
-        row_step, col_step = direction
-        word_len = len(word) - 1
-        left, right = word[:word_index], word[word_index:word_len]
-        opposite_direction = (-row_step, -col_step)
-
-        R = self.search_chunk(right, direction, tuple(start_pos))
-        if R is None:
-            return None
-
-        _, direction = R
-        L = self.search_chunk(left, opposite_direction, tuple(start_pos))
-
-        if L is None:
-            return None
-
-        start, _ = L
-        return start, R[1]
-
     def compare_to_last_added(self, last_added: Dict[str, Any], word):
         last_added_key = list(last_added.keys())[-1]
         last_added_word = last_added[last_added_key]
