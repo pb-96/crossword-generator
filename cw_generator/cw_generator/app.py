@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 
 
 db = create_engine("sqlite://", echo=True)
+# Run create Tables scripts
 
 app = FastAPI()
 

@@ -1,22 +1,6 @@
 from typing import List, Tuple, TypedDict
-from enum import Enum
 from collections import deque, defaultdict
-
-
-class ReplaceStrategy(Enum):
-    # Replace from smallest and find words with fit in given space
-    sort_lr: str = "sort_lr"
-    # Replace from smallest and find words with fit in given space
-    sort_rl: str = "sort_rl"
-
-
-class CanFit(TypedDict):
-    # True if there is not enough space for the chars to fit on the grid
-    no_fit: bool
-    # Diff in chars
-    diff: int
-    # cut_off_index
-    cut_off_index: int
+from cw_generator.custom_types import CanFit, ReplaceStrategy
 
 
 def check_can_fit(dim: int, words: List[str]) -> CanFit:
