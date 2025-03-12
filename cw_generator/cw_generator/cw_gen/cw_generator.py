@@ -35,7 +35,6 @@ class CrossWordGen(GeneratorBase):
             return None
 
         return self.place_randomly(word)
-            
 
     def build_cw(self):
         lst_added = OrderedDict()

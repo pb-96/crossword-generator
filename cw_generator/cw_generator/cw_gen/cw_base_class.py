@@ -6,6 +6,7 @@ import string
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
+
 class GeneratorBase:
     slots = ["cw_matrix"]
 
@@ -27,7 +28,7 @@ class GeneratorBase:
         self.re_try_un_added = retry_un_added
         self.build_cw()
         self.pad_random_letters()
-        
+
     def can_fit_word(
         self,
         word: str,
@@ -68,7 +69,7 @@ class GeneratorBase:
             ptr = (ptr + 1) % len(self.available_start_points)
             random_start = given_keys[ptr]
         return None
-    
+
     @lru_cache(maxsize=None)
     def search_chunk(self, word: str, direction: Tuple[int, int], pos: Tuple[int, int]):
         r, c = pos
@@ -89,7 +90,7 @@ class GeneratorBase:
 
     def build_cw(self):
         return None
-    
+
     def pad_random_letters(self) -> None:
         random_letters = [
             choice(string.ascii_lowercase)
@@ -100,9 +101,7 @@ class GeneratorBase:
             self.available_start_points, random_letters
         ):
             self.cw_matrix[row][col] = random_letter
-    
 
     def __iter__(self):
         for line in self.cw_matrix:
             yield line
-

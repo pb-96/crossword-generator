@@ -21,7 +21,6 @@ class CWTrieGenerator(GeneratorBase):
     def __init__(self, words, dimensions=15, retry_un_added=False):
         self.tree: Dict[str, List[Node]] = defaultdict(list)
         super().__init__(words, dimensions, retry_un_added)
-        
 
     def compare_to_existing(self, word: str) -> Union[Tuple, None]:
         for idx, letter in enumerate(word):
