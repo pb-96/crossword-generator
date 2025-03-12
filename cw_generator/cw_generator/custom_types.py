@@ -1,5 +1,7 @@
-from typing import TypedDict
+from typing import TypedDict, List, Dict, Tuple
 from enum import Enum
+from pydantic import BaseModel
+
 
 class Config(TypedDict):
     ...
@@ -19,3 +21,14 @@ class CanFit(TypedDict):
     diff: int
     # cut_off_index
     cut_off_index: int
+
+class Point(TypedDict):
+    start: Tuple[int, int]
+    end: Tuple[int, int]
+    direction: Tuple[int, int]
+
+class CWPoint(BaseModel):
+    words_description: Dict[str, str]
+    # The inner dict would be {'start': (0,1 ), 'end': (0, 4), 'direction': (0, 1)}
+    words_locations: Dict[str, Point]
+    cw_matrix: List[List[str]]

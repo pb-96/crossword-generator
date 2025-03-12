@@ -13,6 +13,7 @@ fastapi-utilities = "^0.3.0"
 black = "^25.1.0"
 sqlalchemy = "^2.0.38"
 dynaconf = "^3.2.10"
+pydantic = "^2.10.6"
 
 
 [build-system]
