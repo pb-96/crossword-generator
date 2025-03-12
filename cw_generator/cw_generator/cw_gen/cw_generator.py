@@ -28,6 +28,7 @@ class CrossWordGen:
         self.un_added_words = []
         self.re_try_un_added = retry_un_added
         self.build_cw()
+        self.pad_random_letters()
 
     def place_randomly(self, word: str) -> Optional[Tuple]:
         random_index = randint(0, len(self.available_start_points))
@@ -115,6 +116,28 @@ class CrossWordGen:
             return None
 
         return self.place_randomly(word)
+    
+    def pad_random_letters(self) -> None:
+        random_letters = [
+            choice(string.ascii_lowercase)
+            for _ in range(len(self.available_start_points))
+        ]
+
+        for (row, col), random_letter in zip(
+            self.available_start_points, random_letters
+        ):
+            self.cw_matrix[row][col] = random_letter
+
+    def place_tup(self, T ):
+        initial_placement, direction = T
+        for char in word:
+            self.tree[char].append(Node(value=char, pos=initial_placement))
+            self.cw_matrix[initial_placement[0]][initial_placement[1]] = char
+            initial_placement = (
+                initial_placement[0] + direction[0],
+                initial_placement[1] + direction[1],
+            )
+        
 
     def build_cw(self):
         lst_added = OrderedDict()
@@ -142,17 +165,6 @@ class CrossWordGen:
             for word, indexes in zip(word, rolling_indexes):
                 this_word[word].append(indexes)
             lst_added[word] = this_word
-
-        random_letters = [
-            choice(string.ascii_lowercase)
-            for _ in range(len(self.available_start_points))
-        ]
-
-        for (row, col), random_letter in zip(
-            self.available_start_points, random_letters
-        ):
-            self.cw_matrix[row][col] = random_letter
-
         return self.cw_matrix
 
     def __iter__(self):
