@@ -56,7 +56,7 @@ class GeneratorBase:
         return start, R[1]
 
     def place_randomly(self, word: str) -> Optional[Tuple]:
-        random_index = randint(0, len(self.available_start_points))
+        random_index = randint(0, len(self.available_start_points) - 1)
         given_keys = list(self.available_start_points.keys())
         random_start = given_keys[random_index]
         ptr = int(random_index)
@@ -67,6 +67,9 @@ class GeneratorBase:
                 if starting_point:
                     return random_start, direction
             ptr = (ptr + 1) % len(self.available_start_points)
+            if ptr == 0:
+                # Could not place word
+                break
             random_start = given_keys[ptr]
         return None
 
