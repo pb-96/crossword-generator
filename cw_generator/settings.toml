@@ -1,0 +1,2 @@
+[default]
+DATABASE_URL = "postgresql://postgres:db_password@localhost:5432/postgres"

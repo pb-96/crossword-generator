@@ -4,6 +4,13 @@ from .cw_gen.generate import generate_cw
 from sqlalchemy import create_engine
 from custom_types import CWPoint
 from typing import Union
+import Dynaconf
+
+# Load settings
+settings = Dynaconf(settings_files=["settings.toml"], envvar_prefix="DYNACONF")
+
+# Create SQLAlchemy engine
+engine = create_engine(settings.DATABASE_URL)
 
 db = create_engine("sqlite://", echo=True)
 # Run create Tables scripts

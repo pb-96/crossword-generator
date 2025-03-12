@@ -1,3 +1,8 @@
-/*dist
-/*.venv
+# Ignore dist folder
+dist/
+
+# Ignore __pycache__ folders
 __pycache__/
+
+# Ignore any file called .settings.toml
+.secrets.toml
