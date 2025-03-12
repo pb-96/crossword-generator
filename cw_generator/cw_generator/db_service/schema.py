@@ -20,5 +20,7 @@ class CWGeneric(Base):
 class WordVectorStore(Base):
     __tablename__ = "word_vector_store"
     word: Mapped[str] = Column(String(128 * 4))
-    description: Mapped[str] = Column(String(256 * 4))
+    description: Mapped[str] = Column(String(256 * 4), default=None)
     embedding: Mapped[str] = Column(LargeBinary)
+    # None here would be it was never used
+    last_used = Column(Datetime(timezone=True), default=None)

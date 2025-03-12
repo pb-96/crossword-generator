@@ -1,2 +1,2 @@
 [default]
-DATABASE_URL = "postgresql://postgres:db_password@localhost:5432/postgres"
+DATABASE_URL = "postgresql://postgres:DYNACONF_PASSWORD@localhost:5432/postgres"

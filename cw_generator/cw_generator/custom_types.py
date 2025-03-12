@@ -3,15 +3,18 @@ from enum import Enum
 from pydantic import BaseModel
 
 
-class Config(TypedDict):
-    ...
-
-
 class ReplaceStrategy(Enum):
     # Replace from smallest and find words with fit in given space
     sort_lr: str = "sort_lr"
     # Replace from smallest and find words with fit in given space
     sort_rl: str = "sort_rl"
+
+
+class Config(TypedDict):
+    default_chunk: int
+    sort_strategy: ReplaceStrategy
+    look_back_weeks: int
+    look_back_days: int
 
 
 class CanFit(TypedDict):
@@ -22,10 +25,12 @@ class CanFit(TypedDict):
     # cut_off_index
     cut_off_index: int
 
+
 class Point(TypedDict):
     start: Tuple[int, int]
     end: Tuple[int, int]
     direction: Tuple[int, int]
+
 
 class CWPoint(BaseModel):
     words_description: Dict[str, str]
