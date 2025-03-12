@@ -4,65 +4,10 @@ from random import randint, choice
 from functools import lru_cache
 import string
 import warnings
+from cw_generator.cw_gen.cw_base_class import GeneratorBase
 
-ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
-
-class CrossWordGen:
-    slots = ["cw_matrix"]
-
-    def __init__(
-        self, words: List[str], dimensions: int = 15, retry_un_added: bool = False
-    ):
-        self.cw_matrix = [[] for _ in range(dimensions)]
-        self.available_start_points = OrderedDict()
-        for row in range(dimensions):
-            for col in range(dimensions):
-                self.cw_matrix[row].append("X")
-                self.available_start_points[(row, col)] = None
-
-        self.words = sorted(words, key=len, reverse=True)
-        directions = ALL_DIRECTIONS
-        self.directions = directions
-        # Exclude these a from testing suite
-        self.un_added_words = []
-        self.re_try_un_added = retry_un_added
-        self.build_cw()
-        self.pad_random_letters()
-
-    def place_randomly(self, word: str) -> Optional[Tuple]:
-        random_index = randint(0, len(self.available_start_points))
-        given_keys = list(self.available_start_points.keys())
-        random_start = given_keys[random_index]
-        ptr = int(random_index)
-
-        while ptr != (random_index - 1):
-            for direction in self.directions:
-                starting_point = self.search_chunk(word, direction, random_start)
-                if starting_point:
-                    return random_start, direction
-            ptr = (ptr + 1) % len(self.available_start_points)
-            random_start = given_keys[ptr]
-        return None
-
-    @lru_cache(maxsize=None)
-    def search_chunk(self, word: str, direction: Tuple[int, int], pos: Tuple[int, int]):
-        r, c = pos
-        for _ in range(len(word)):
-            r, c = r + direction[0], c + direction[1]
-            if not (
-                r >= 0
-                and r < len(self.cw_matrix)
-                and c >= 0
-                and c < len(self.cw_matrix[0])
-            ):
-                return None
-
-            if self.cw_matrix[r][c] != "X":
-                return None
-
-        return (r, c), direction
-
+class CrossWordGen(GeneratorBase):
     def can_fit_word(
         self,
         word: str,
@@ -116,28 +61,7 @@ class CrossWordGen:
             return None
 
         return self.place_randomly(word)
-    
-    def pad_random_letters(self) -> None:
-        random_letters = [
-            choice(string.ascii_lowercase)
-            for _ in range(len(self.available_start_points))
-        ]
-
-        for (row, col), random_letter in zip(
-            self.available_start_points, random_letters
-        ):
-            self.cw_matrix[row][col] = random_letter
-
-    def place_tup(self, T ):
-        initial_placement, direction = T
-        for char in word:
-            self.tree[char].append(Node(value=char, pos=initial_placement))
-            self.cw_matrix[initial_placement[0]][initial_placement[1]] = char
-            initial_placement = (
-                initial_placement[0] + direction[0],
-                initial_placement[1] + direction[1],
-            )
-        
+            
 
     def build_cw(self):
         lst_added = OrderedDict()
@@ -166,7 +90,3 @@ class CrossWordGen:
                 this_word[word].append(indexes)
             lst_added[word] = this_word
         return self.cw_matrix
-
-    def __iter__(self):
-        for line in self.cw_matrix:
-            yield line

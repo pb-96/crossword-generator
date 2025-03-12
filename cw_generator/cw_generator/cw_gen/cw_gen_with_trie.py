@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict, Union
 from collections import defaultdict, OrderedDict
-from cw_generator import CrossWordGen
+from cw_generator.cw_gen.cw_base_class import GeneratorBase
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -17,7 +17,7 @@ class Node:
         return f"{self.value}:{self.pos}"
 
 
-class CWTrieGenerator(CrossWordGen):
+class CWTrieGenerator(GeneratorBase):
     def __init__(self, words, dimensions=15, retry_un_added=False):
         self.tree: Dict[str, List[Node]] = defaultdict(list)
         super().__init__(words, dimensions, retry_un_added)
