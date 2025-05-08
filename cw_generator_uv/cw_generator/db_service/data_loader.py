@@ -6,10 +6,10 @@ URL = "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary
 
 def get_raw_data(url: str):
     data_fetched = requests.get(url)
-    return data_fetched.json
+    return data_fetched.json()
 
 
-def write_to_file(path: Path): ...
+def write_to_database(path: Path): ...
 
 
 if __name__ == "__main__":

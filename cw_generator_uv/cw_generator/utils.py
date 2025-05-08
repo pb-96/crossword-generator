@@ -1,15 +1,10 @@
 from typing import List, cast, Any
 import base64
 from ast import literal_eval
-import Dynaconf
+from dynaconf import Dynaconf
 import requests
 from enum import Enum
-
-MATRIX_TYPE = List[List[Any]]
-
-
-class SupportedCompression(Enum):
-    base64 = "base64"
+from cw_generator.custom_types import MATRIX_TYPE, SupportedCompression
 
 
 def compress_matrix(cw_matrix: MATRIX_TYPE) -> bytes:

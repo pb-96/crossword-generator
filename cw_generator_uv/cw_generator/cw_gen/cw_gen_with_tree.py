@@ -45,12 +45,18 @@ class CWTreeGenerator(GeneratorBase):
                 initial_placement[1] + direction[1],
             )
 
+        self.words_by_locations[word] = {
+            "locatoin_tuple_start": tup[0],
+            "locatoin_tuple_start": initial_placement,
+        }
+
     def build_cw(self):
-        for word in self.words:
-            T = None
-            if not self.tree:
+        words = iter(self.words)
+        word = next(words)
+        self.place_randomly(word)
+
+        for word in words:
+            T = self.compare_to_existing(word)
+            if T is None:
                 T = self.place_randomly(word)
-            else:
-                T = self.compare_to_existing(word)
-            if T is not None:
-                self.place_tup(word, T)
+            self.place_tup(word, T)

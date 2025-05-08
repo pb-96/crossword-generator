@@ -6,7 +6,11 @@ class Point:
         self.x = x
         self.y = y
 
-    def __eq__(self, other: "Point"):
+    def __eq__(self, other: Union["Point", Tuple[int, int]]):
+        if isinstance(other, tuple):
+            assert len(other) == 2, "Tuple must represent a point"
+            x, y = other
+            return self.x == x and self.y == y
         return self.x == other.x and self.y == other.y
 
     def add_tuple(self, positions: Tuple[int, int]) -> "Point":

@@ -3,6 +3,7 @@ from collections import OrderedDict
 from random import randint, choice
 from functools import lru_cache
 import string
+from collections import defaultdict
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -19,13 +20,14 @@ class GeneratorBase:
             for col in range(dimensions):
                 self.cw_matrix[row].append("X")
                 self.available_start_points[(row, col)] = None
-
+        # Surely this where one of the enums about ordering comes into play?
         self.words = sorted(words, key=len, reverse=True)
         directions = ALL_DIRECTIONS
         self.directions = directions
         # Exclude these a from testing suite
         self.un_added_words = []
         self.re_try_un_added = retry_un_added
+        self.words_by_locations = {}
         self.build_cw()
         self.pad_random_letters()
 

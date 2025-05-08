@@ -1,6 +1,19 @@
-from typing import TypedDict, List, Dict, Tuple
+from typing import TypedDict, List, Dict, Tuple, Any
 from enum import Enum
 from pydantic import BaseModel
+
+MATRIX_TYPE = List[List[Any]]
+
+
+class SupportedCompression(Enum):
+    base64 = "base64"
+
+
+class WordByLocationDict(TypedDict):
+    location_tuple_start: Tuple[int, int]
+    location_tuple_end: Tuple[int, int]
+    description: str
+    word: str
 
 
 class ReplaceStrategy(Enum):
