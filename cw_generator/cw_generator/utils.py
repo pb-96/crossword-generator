@@ -1,6 +1,8 @@
 from typing import List, cast, Any
 import base64
 from ast import literal_eval
+import Dynaconf
+import requests
 
 MATRIX_TYPE = List[List[Any]]
 
@@ -19,5 +21,13 @@ def decompress(bytes_matrix: bytes, compression_func: str) -> List[List[str]]:
             if isinstance(raw, list) and len(list) > 0 and isinstance(raw[0], list):
                 raw = cast(MATRIX_TYPE, raw)
                 return raw
-
+            else:
+                raise ValueError("Matrix was malformed")
     return default
+
+
+def download_and_parse_dict(settings: Dynaconf):
+    response = requests.get(settings.DYNACONF_DICT_URL)
+    # This will take forever
+
+    response.json()

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
-from schema import WordVectorStore
+from schema import WordVectorStore, CWGeneric
 from datetime import datetime, timedelta
 from cw_generator.custom_types import Config
 
@@ -16,6 +16,7 @@ def get_random_shuffle(session, config_dict: Config, chunk: int, page: int = 1):
     delta = datetime.datetime.utcnow() - timedelta(
         weeks=config_dict["look_back_weeks"], days=config_dict["look_back_days"]
     )
+
     offset = (page - 1) * chunk
     query = (
         session.query(WordVectorStore)
@@ -32,3 +33,7 @@ def get_random_shuffle(session, config_dict: Config, chunk: int, page: int = 1):
 
     session.commit()
     return rows
+
+
+def get_today_crossword(client_timestamp: datetime) -> CWGeneric:
+    return
