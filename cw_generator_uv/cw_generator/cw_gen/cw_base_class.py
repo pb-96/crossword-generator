@@ -23,8 +23,7 @@ class GeneratorBase:
         # Surely this where one of the enums about ordering comes into play?
         # Words should be sorted already
         self.words = words
-        directions = ALL_DIRECTIONS
-        self.directions = directions
+        self.directions = ALL_DIRECTIONS
         # Exclude these a from testing suite
         self.un_added_words = []
         self.re_try_un_added = retry_un_added

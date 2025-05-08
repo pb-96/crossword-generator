@@ -56,7 +56,8 @@ class CWTreeGenerator(GeneratorBase):
         self.place_tup(word, self.place_randomly(word))
 
         for word in words:
-            T = self.compare_to_existing(word)
-            if T is None:
-                T = self.place_randomly(word)
-            self.place_tup(word, T)
+            T = self.compare_to_existing(word) or self.place_randomly(word)
+            if T is not None:
+                self.place_tup(word, T)
+            else:
+                self.un_added_words(word)

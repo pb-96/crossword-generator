@@ -36,8 +36,3 @@ def compress(matrix: MATRIX_TYPE, compression_func: SupportedCompression) -> byt
     return default
 
 
-def download_and_parse_dict(settings: Dynaconf):
-    response = requests.get(settings.DYNACONF_DICT_URL)
-    # This will take forever
-
-    response.json()
