@@ -53,7 +53,7 @@ class CWTreeGenerator(GeneratorBase):
     def build_cw(self):
         words = iter(self.words)
         word = next(words)
-        self.place_randomly(word)
+        self.place_tup(word, self.place_randomly(word))
 
         for word in words:
             T = self.compare_to_existing(word)
