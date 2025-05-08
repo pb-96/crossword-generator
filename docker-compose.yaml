@@ -1,0 +1,16 @@
+version: "3.8" # Specify the Docker Compose file version
+services:
+  db:  # Define a service named "db" (or any name you prefer)
+    image: postgres:14.1-alpine  # Use the official PostgreSQL 14.1-alpine Docker image
+    restart: always  # Automatically restart the container if it stops
+    environment:
+      - POSTGRES_USER=postgres  # Set the PostgreSQL username
+      - POSTGRES_PASSWORD=postgres  # Set the PostgreSQL password
+      - POSTGRES_DB=postgres  # Set the default database name
+    ports:
+      - "5001:5001"  # Map host port 5432 to container port 5432
+    volumes:
+      - db:/var/lib/postgresql/data  # Define a volume to persist data
+volumes:
+  db:  # Define a volume named "db"
+    driver: local

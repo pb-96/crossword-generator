@@ -1,5 +1,4 @@
-from typing import List, Tuple, TypedDict
-from collections import deque, defaultdict
+from typing import List, Tuple
 from cw_generator.custom_types import CanFit, ReplaceStrategy
 
 

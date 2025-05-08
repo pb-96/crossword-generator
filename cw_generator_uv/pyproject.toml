@@ -1,0 +1,14 @@
+[project]
+name = "cw-generator-uv"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dynaconf>=3.2.11",
+    "fastapi>=0.115.12",
+    "pydantic>=2.11.4",
+    "requests>=2.32.3",
+    "ruff>=0.11.8",
+    "sqlalchemy>=2.0.40",
+]

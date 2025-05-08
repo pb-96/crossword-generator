@@ -3,19 +3,26 @@ import base64
 from ast import literal_eval
 import Dynaconf
 import requests
+from enum import Enum
 
 MATRIX_TYPE = List[List[Any]]
 
 
-def compress_matrix(cw_matrix: List[List[str]]) -> bytes:
+class SupportedCompression(Enum):
+    base64 = "base64"
+
+
+def compress_matrix(cw_matrix: MATRIX_TYPE) -> bytes:
     joined_matrix = "".join((" ".join(l) for l in cw_matrix))
     compressed = base64.b64encode(joined_matrix)
     return compressed
 
 
-def decompress(bytes_matrix: bytes, compression_func: str) -> List[List[str]]:
+def decompress(
+    bytes_matrix: bytes, compression_func: SupportedCompression
+) -> List[List[str]]:
     default = [[]]
-    match compression_func:
+    match compression_func.value:
         case "base64":
             raw = literal_eval(base64.b64decode(bytes_matrix))
             if isinstance(raw, list) and len(list) > 0 and isinstance(raw[0], list):
@@ -23,6 +30,14 @@ def decompress(bytes_matrix: bytes, compression_func: str) -> List[List[str]]:
                 return raw
             else:
                 raise ValueError("Matrix was malformed")
+    return default
+
+
+def compress(matrix: MATRIX_TYPE, compression_func: SupportedCompression) -> bytes:
+    default = [[]]
+    match compression_func.value:
+        case "base64":
+            return compress_matrix(matrix)
     return default
 
 

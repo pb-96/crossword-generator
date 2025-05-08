@@ -1,5 +1,5 @@
 from typing import List, Tuple, Dict, Union
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 from cw_generator.cw_gen.cw_base_class import GeneratorBase
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]

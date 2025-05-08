@@ -1,13 +1,17 @@
 from fastapi import FastAPI
-from .custom_schedular.schedule import repeat_every_day
-from .cw_gen.generate import generate_cw
+from cw_generator.custom_schedular.schedule import repeat_every_day
+from cw_generator.cw_gen.generate import generate_cw
 from sqlalchemy import create_engine
-from custom_types import CWPoint, Config, ReplaceStrategy
+from cw_generator.custom_types import CWPoint, Config, ReplaceStrategy
 from typing import Union
-import Dynaconf
+from dynaconf import Dynaconf
 import datetime
-from db_service.queries import get_today_crossword, get_random_shuffle, get_session
-from utils import decompress
+from cw_generator.db_service.queries import (
+    get_today_crossword,
+    get_random_shuffle,
+    get_session,
+)
+from cw_generator.utils import decompress
 
 settings = Dynaconf(settings_files=["settings.toml"], envvar_prefix="DYNACONF")
 engine = create_engine(settings.DATABASE_URL)

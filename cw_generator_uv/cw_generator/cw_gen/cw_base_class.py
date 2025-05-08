@@ -36,7 +36,6 @@ class GeneratorBase:
         direction: Tuple[int, int],
         word_index: int,
     ) -> Optional[Tuple[int, int]]:
-
         row_step, col_step = direction
         word_len = len(word) - 1
         left, right = word[:word_index], word[word_index:word_len]

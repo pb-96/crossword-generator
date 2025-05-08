@@ -16,13 +16,14 @@ def repeat_every_day(hour: int, minute: int, second: int):
     def decorator_func(func):
         @wraps(func)
         def time_wrapper(*args, **kwargs):
-            delta = datetime(hour=hour, minute=minute, second=second)
-            delta.day = delta.day + 1
-            now = datetime.now()
-            while now < delta:
-                sleep(ONE_HOUR)
+            while True:
+                delta = datetime(hour=hour, minute=minute, second=second)
+                delta.day = delta.day + 1
                 now = datetime.now()
-            func(args, kwargs)
+                while now < delta:
+                    sleep(ONE_HOUR)
+                    now = datetime.now()
+                func(args, kwargs)
 
         return time_wrapper
 
