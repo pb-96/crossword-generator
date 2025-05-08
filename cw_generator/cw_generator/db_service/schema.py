@@ -2,7 +2,7 @@ from typing import List
 from typing import Optional
 from sqlalchemy import ForeignKey, String, Column, Integer
 from sqlalchemy.types import Datetime, LargeBinary
-from sqlalchemy.orm import DeclarativeBase, Mapped, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped
 from sqlalchemy.dialects.postgresql import ARRAY
 import datetime
 
