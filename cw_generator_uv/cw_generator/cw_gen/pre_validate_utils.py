@@ -12,7 +12,7 @@ swops_dict = {
 }
 
 
-def custom_lev_distance(word_one, word_two) -> bool:
+def custom_lev_distance(word_one: str, word_two: str) -> bool:
     # This will look at the lev distance
     # And if the difference is greater then the threshold
     # Check if it is the last [Threshold: ] this is the difference

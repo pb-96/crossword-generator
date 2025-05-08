@@ -21,7 +21,8 @@ class GeneratorBase:
                 self.cw_matrix[row].append("X")
                 self.available_start_points[(row, col)] = None
         # Surely this where one of the enums about ordering comes into play?
-        self.words = sorted(words, key=len, reverse=True)
+        # Words should be sorted already
+        self.words = words
         directions = ALL_DIRECTIONS
         self.directions = directions
         # Exclude these a from testing suite
