@@ -6,7 +6,7 @@ from dynaconf import settings
 
 
 def get_engine() -> Engine:
-    return create_engine(settings.postgres.url)
+    return create_engine(settings.database_url)
 
 
 def setup_tables(engine: Engine):
