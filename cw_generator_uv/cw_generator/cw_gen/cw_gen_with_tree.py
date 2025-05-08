@@ -44,7 +44,7 @@ class CWTreeGenerator(GeneratorBase):
                 initial_placement[0] + direction[0],
                 initial_placement[1] + direction[1],
             )
-
+        # Should direction go here though
         self.words_by_locations[word] = {
             "locatoin_tuple_start": tup[0],
             "locatoin_tuple_start": initial_placement,
