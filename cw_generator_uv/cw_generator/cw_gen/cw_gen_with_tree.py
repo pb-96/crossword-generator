@@ -60,4 +60,4 @@ class CWTreeGenerator(GeneratorBase):
             if T is not None:
                 self.place_tup(word, T)
             else:
-                self.un_added_words(word)
+                self.un_added_words.append(word)
