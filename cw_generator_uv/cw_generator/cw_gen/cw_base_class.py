@@ -91,7 +91,7 @@ class GeneratorBase:
         return (r, c), direction
 
     def build_cw(self):
-        return None
+        raise NotImplementedError("Subclass must implement this method")
 
     def pad_random_letters(self) -> None:
         random_letters = [

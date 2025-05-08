@@ -13,7 +13,7 @@ from cw_generator.db_service.queries import (
 )
 from cw_generator.utils import decompress
 
-settings = Dynaconf(settings_files=["settings.toml"], envvar_prefix="DYNACONF")
+settings = Dynaconf(settings_files=[".settings.toml"], envvar_prefix="DYNACONF")
 engine = create_engine(settings.DATABASE_URL)
 app = FastAPI()
 
