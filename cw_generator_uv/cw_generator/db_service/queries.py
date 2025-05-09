@@ -55,7 +55,7 @@ def get_today_crossword(client_timestamp: Union[datetime, None]) -> CWPoint:
             client_timestamp = datetime.now()
 
         today = datetime.date()
-        # forward back comparasion
+        # forward back comparison
         forward = today + timedelta(days=1)
         backward = today + timedelta(days=-1)
 
@@ -70,18 +70,18 @@ def get_today_crossword(client_timestamp: Union[datetime, None]) -> CWPoint:
             .filter(WordsByLocation.related_uuid == result.uuid)
             .all()
         )
-        words_and_despcriptions: Dict[str, str] = {}
+        words_and_descriptions: Dict[str, str] = {}
         words_and_locations: Dict[str, Tuple[int, int]] = {}
 
         for row in related_words:
-            words_and_despcriptions[row.word] = row.description
+            words_and_descriptions[row.word] = row.description
             words_and_locations[row.word] = (
                 row.location_tuple_start,
                 row.location_tuple_end,
             )
 
         return_type = CWPoint(
-            words_description=words_and_despcriptions,
+            words_description=words_and_descriptions,
             words_locations=words_and_locations,
             cw_matrix=decompressed_matrix,
         )
