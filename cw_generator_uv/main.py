@@ -26,9 +26,6 @@ CONFIG_DICT: Config = {
 
 @repeat_every_day(hour=23, minute=0, second=0)
 def generate_crossword() -> True:
-    # Query words
-    # Will need a shuffle query
-    # Run words through a cross word generator
     vector_words: List[models.WordVectorStore] = get_random_shuffle()
     words_only: Dict[str, models.WordVectorStore] = {
         vc_words.word: vector_words for vc_words in vector_words
@@ -38,7 +35,6 @@ def generate_crossword() -> True:
     words_store = []
 
     for key, value in words_by_location.items():
-        # Only thing missing here is the description
         description = words_only[key].description
         as_dict: models.WordsByLocation = models.WordsByLocation(
             related_uuid=unique_id,

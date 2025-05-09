@@ -1,9 +1,6 @@
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from time import mktime, localtime, sleep
-
-# 3600 seconds which is one hour times 24 which is one day
-ONE_HOUR = 60 * 60 * 24
 
 
 def get_local_time() -> datetime:
@@ -17,13 +14,17 @@ def repeat_every_day(hour: int, minute: int, second: int):
         @wraps(func)
         def time_wrapper(*args, **kwargs):
             while True:
-                delta = datetime(hour=hour, minute=minute, second=second)
-                delta.day = delta.day + 1
                 now = datetime.now()
-                while now < delta:
-                    sleep(ONE_HOUR)
-                    now = datetime.now()
-                func(args, kwargs)
+                today_target = datetime.combine(now.date(), time(hour, minute, second))
+
+                if now >= today_target:
+                    # If we've already passed the target time today, schedule for tomorrow
+                    today_target += timedelta(days=1)
+
+                sleep_seconds = (today_target - now).total_seconds()
+                sleep(sleep_seconds)
+
+                func(*args, **kwargs)
 
         return time_wrapper
 
