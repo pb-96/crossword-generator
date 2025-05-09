@@ -36,3 +36,4 @@ def compress(matrix: MATRIX_TYPE, compression_func: SupportedCompression) -> byt
     return default
 
 
+def calculate_direction(): ...

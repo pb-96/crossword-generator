@@ -1,13 +1,30 @@
 from cw_generator.cw_gen.cw_gen_with_tree import CWTreeGenerator
+from typing import List, Tuple
+from pre_validate_utils import (
+    singular_only,
+    all_words_are_unique,
+    check_can_fit_estimate,
+    merge_strategy,
+)
+from cw_generator.custom_types import WordByLocationDict, MATRIX_TYPE
+import logging
 
-from cw_generator.cw_gen.cw_validator import WordSearch, Point
-from typing import List, Dict, Tuple
 
+def generate_cw(to_place: List[str]) -> Tuple[WordByLocationDict, MATRIX_TYPE]:
+    unique, unique_set = all_words_are_unique(to_place)
+    if not unique:
+        raise ValueError("Words to place must be unique")
 
-def generate_cw(to_place: List[str]) -> Dict[str, Tuple]:
-    # Call validation here
-    # Would to ensure the list of words are unique or things would break
-    # Needs to read from config here to determine which CW Generator to actually use
-    cross_word_cls = CWTreeGenerator(to_place)
-    points = {}
-    return points
+    changes, singular_only_set = singular_only(unique_set)
+    if changes:
+        logging.warning("Clashes between singular and non singular words present")
+
+    singular_list = [*singular_only_set]
+
+    can_fit = check_can_fit_estimate(singular_list)
+    # Need to do an and check on the config to tell if this is wanted
+    if can_fit["no_fit"]:
+        singular_list = merge_strategy(can_fit, singular_list)
+
+    cross_word_cls = CWTreeGenerator(singular_list)
+    return cross_word_cls.words_by_locations, cross_word_cls.cw_matrix

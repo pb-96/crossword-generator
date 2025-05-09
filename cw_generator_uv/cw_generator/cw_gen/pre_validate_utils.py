@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set
+from typing import List, Tuple, Set, cast
 from cw_generator.custom_types import CanFit, ReplaceStrategy
 import re
 
@@ -20,38 +20,42 @@ def custom_lev_distance(word_one: str, word_two: str) -> bool:
     ...
 
 
-def singular_only(words: Set[str]) -> bool:
+def singular_only(words: Set[str]) -> Tuple[bool, Set[str]]:
     # This deals with simple plurals
     # Irregular ones would need to dealt with lev distance
     # For now this is good enough
     plurals_set = set()
+    to_remove = set()
 
     for _, word in enumerate(words):
         found = re.search(plurals, word)
         if found:
             key = found.group()
+            to_remove.add(key)
             singular = word[: found.start()] + swops_dict[key]
             plurals_set.add(singular)
         else:
             # APPLY LEV DISTANCE HERE
             continue
+
     duplicates = plurals_set.union(words)
-    return len(duplicates) > 1
+    singular_only = to_remove.difference(words)
+    return len(duplicates) > 1, singular_only
 
 
-def all_words_are_unique(words: List[str]) -> bool:
+def all_words_are_unique(words: List[str]) -> Tuple[bool, Set[str]]:
     unique = {}
     for word in words:
         if word in unique:
-            return False
+            return False, set()
         else:
             unique[word] = True
-    return True
+    return True, set(*unique.keys())
 
 
 def check_can_fit_estimate(dim: int, words: List[str]) -> CanFit:
-    # this would reflect all the possible places
-    # where the chars in each word could it
+    # Would need to add the general config file here
+    words.sort()
     total_space: int = dim * dim
     total_chars = sum((len(word) for word in words))
 
@@ -76,15 +80,20 @@ def check_can_fit_estimate(dim: int, words: List[str]) -> CanFit:
     return return_dict
 
 
-def chop_ordered_words(words: List[str], diff_dict: CanFit) -> Tuple[List, List]:
-    cut_off = diff_dict["cut_off_index"]
-    return words[:cut_off], words[cut_off + 1 :]
+def merge_strategy(can_fit: CanFit, words: List[str]) -> List[str]:
+    rem = words[can_fit["cut_off_index"] :]
+    rolling_diff = can_fit["diff"]
+    extra_words = []
 
+    for word in rem:
+        word_len = len(word)
+        if word_len < rolling_diff:
+            extra_words.append(word)
+            rolling_diff = rolling_diff - word_len
 
-def fit_words(
-    words: List[str], replace_strategy: ReplaceStrategy
-) -> Tuple[List[str], List[str]]:
-    words.sort(key=len, reverse=replace_strategy == ReplaceStrategy.sort_rl)
-    diff_dict = check_can_fit_estimate(len(words), words)
-    fitted_words = chop_ordered_words(words, diff_dict)
-    return fitted_words
+        if rolling_diff < 0:
+            break
+
+    chosen = cast(list, word[can_fit["cut_off_index"] :])
+    chosen.extend(extra_words)
+    return chosen

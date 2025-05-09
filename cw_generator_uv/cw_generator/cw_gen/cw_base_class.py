@@ -3,7 +3,7 @@ from collections import OrderedDict
 from random import randint, choice
 from functools import lru_cache
 import string
-from collections import defaultdict
+
 
 ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 
@@ -37,7 +37,7 @@ class GeneratorBase:
         start_pos: Tuple[int, int],
         direction: Tuple[int, int],
         word_index: int,
-    ) -> Optional[Tuple[Tuple[int, int]], ]:
+    ) -> Optional[Tuple[Tuple[int, int]],]:
         row_step, col_step = direction
         word_len = len(word) - 1
         left, right = word[:word_index], word[word_index:word_len]

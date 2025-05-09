@@ -28,6 +28,6 @@ class WordVectorStore(DeclarativeBase):
     __tablename__ = "word_vector_store"
     word: Mapped[str] = Column(String(128 * 4))
     description: Mapped[str] = Column(String(256 * 4), default=None)
-    embedding: Mapped[str] = Column(LargeBinary)
+    embedding: Mapped[str] = Column(LargeBinary, nullable=True)
     # None here would be it was never used
     last_used = Column(DateTime(timezone=True), default=None)

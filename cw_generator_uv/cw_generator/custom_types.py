@@ -1,6 +1,7 @@
 from typing import TypedDict, List, Dict, Tuple, Any
 from enum import Enum
 from pydantic import BaseModel
+from typing import Literal
 
 MATRIX_TYPE = List[List[Any]]
 
@@ -18,14 +19,14 @@ class WordByLocationDict(TypedDict):
 
 class ReplaceStrategy(Enum):
     # Replace from smallest and find words with fit in given space
-    sort_lr: str = "sort_lr"
+    sort_lr = "sort_lr"
     # Replace from smallest and find words with fit in given space
-    sort_rl: str = "sort_rl"
+    sort_rl = "sort_rl"
 
 
 class Config(TypedDict):
     default_chunk: int
-    sort_strategy: ReplaceStrategy
+    sort_strategy: Literal[ReplaceStrategy.sort_lr]
     look_back_weeks: int
     look_back_days: int
 

@@ -12,7 +12,7 @@ from cw_generator.custom_types import (
     SupportedCompression,
     WordByLocationDict,
 )
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 
 def get_session(db_engine):
@@ -20,9 +20,8 @@ def get_session(db_engine):
 
 
 def get_random_shuffle(config_dict: Config, page: int = 1):
-    with db(commit_on_exit=True) as session:
-        session = cast(Session, session)
-        # Need a context manager here to get the db
+    with db(commit_on_exit=True):
+        session = db.session
         if page < 0:
             page = 1
 
@@ -30,7 +29,7 @@ def get_random_shuffle(config_dict: Config, page: int = 1):
             weeks=config_dict["look_back_weeks"], days=config_dict["look_back_days"]
         )
         chunk = config_dict["default_chunk"]
-        offset = (page - 1) * chunk
+        offset = page * chunk
         query = (
             session.query(WordVectorStore)
             .filter(
@@ -50,8 +49,8 @@ def get_random_shuffle(config_dict: Config, page: int = 1):
 
 
 def get_today_crossword(client_timestamp: Union[datetime, None]) -> CWPoint:
-    with db() as session:
-        session = cast(Session, session)
+    with db():
+        session = cast(Session, db.session)
         if client_timestamp is None:
             client_timestamp = datetime.now()
 
@@ -92,32 +91,45 @@ def get_today_crossword(client_timestamp: Union[datetime, None]) -> CWPoint:
 
 def create_cross_word_entry(
     cw_matrix: MATRIX_TYPE,
-    words: List[WordByLocationDict],
+    words: Union[List[WordByLocationDict], List[WordVectorStore]],
+    cw_uuid: Union[str, UUID] = None,
     compress_func: SupportedCompression = SupportedCompression.base64,
 ):
-    cw_uuid = str(uuid4())
+    if cw_uuid is None:
+        cw_uuid = str(uuid4())
+    elif isinstance(cw_uuid, UUID):
+        cw_uuid = str(cw_uuid)
+
     compressed_matrix = compress(cw_matrix, compress_func)
+    try:
+        with db():
+            session = cast(Session, db.session)
+            if isinstance(words[0], WordByLocationDict):
+                words_by_location = []
+                for element in words:
+                    obj = WordsByLocation(
+                        related_uuid=cw_uuid,
+                        word=element["word"],
+                        description=element["description"],
+                        location_tuple_start=element["location_tuple_start"],
+                        location_tuple_end=element["location_tuple_end"],
+                    )
+                    words_by_location.append(obj)
+                session.add_all(words_by_location)
+            else:
+                session.add_all(words)
 
-    with db() as session:
-        session = cast(Session, session)
-        words_by_location = []
-        for element in words:
-            obj = WordsByLocation(
-                related_uuid=cw_uuid,
-                word=element["word"],
-                description=element["description"],
-                location_tuple_start=element["location_tuple_start"],
-                location_tuple_end=element["location_tuple_end"],
+            session.add(
+                CWGeneric(
+                    uuid=cw_matrix,
+                    cw_bytes=compressed_matrix,
+                    encoding_func=compress_func.value,
+                )
             )
-            words_by_location.append(obj)
 
-        session.add_all(words_by_location)
-        session.add(
-            CWGeneric(
-                uuid=cw_matrix,
-                cw_bytes=compressed_matrix,
-                encoding_func=compress_func.value,
-            )
-        )
+            session.commit()
 
-        session.commit()
+    except Exception as e:
+        return False
+
+    return True
