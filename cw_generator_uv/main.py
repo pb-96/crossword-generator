@@ -6,10 +6,7 @@ from cw_generator.custom_types import CWPoint, Config, ReplaceStrategy
 from typing import Union, List, Dict
 from dynaconf import Dynaconf
 import datetime
-from cw_generator.db_service.queries import (
-    get_today_crossword,
-    get_random_shuffle
-)
+from cw_generator.db_service.queries import get_today_crossword, get_random_shuffle
 import cw_generator.db_service.schema as models
 from uuid import uuid4
 from cw_generator.db_service.queries import create_cross_word_entry
