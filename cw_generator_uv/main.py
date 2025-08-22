@@ -49,14 +49,11 @@ def generate_crossword() -> True:
 
 
 @app.get("get-current-cw/{client_timestamp}")
-def get_current_cw(client_timestamp: Union[datetime.datetime, None]) -> CWPoint:
+def get_current_cw(client_timestamp: Union[float, None]) -> CWPoint:
     # Convert client timestamp to datetime object
     if client_timestamp is None:
-        client_timestamp = datetime.datetime.now()
-    as_date_only = datetime.datetime(
-        day=client_timestamp.day,
-        month=client_timestamp.month,
-        year=client_timestamp.year,
-    )
+        client_timestamp = datetime.datetime.now().timestamp()
+    # Convert timestamp to datetime object
+    as_date_only = datetime.datetime.fromtimestamp(client_timestamp)
     cw_object = get_today_crossword(as_date_only)
     return cw_object
