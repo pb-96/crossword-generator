@@ -116,30 +116,3 @@ class CWTreeGenerator(GeneratorBase):
                 self.place_tup(word, placement)
             else:
                 self.un_added_words.append(word)
-
-
-if __name__ == "__main__":
-    words = [
-        "istanbul",
-        "march",
-        "winchester",
-        "three",
-        "raymond",
-        "cardiff",
-        "twentythree",
-        "twentytwenty",
-        "byrnedafis",
-        "talgareg",
-        "dublin",
-        "oxford",
-        "rathsallagh",
-        "eryri",
-        "wicklow",
-    ]
-
-    cw_generator = CWTreeGenerator(words=words)
-    for line in cw_generator.cw_matrix:
-        print(line)
-    
-    print(cw_generator.words_by_locations)
-    print(len(words))
