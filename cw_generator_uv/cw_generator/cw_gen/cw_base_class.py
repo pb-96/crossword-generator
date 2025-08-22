@@ -5,7 +5,7 @@ from functools import lru_cache
 import string
 
 
-ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
+ALL_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 1), (1, 1), (1, -1)]
 
 
 class GeneratorBase:
@@ -33,7 +33,8 @@ class GeneratorBase:
             raise ValueError("Words list cannot be empty")
         if dimensions < 1:
             raise ValueError("Dimensions must be greater than 0")
-            
+        # Truthy check is fine for now
+        words = [word for word in words if word]
         # Create temporary working matrix
         temp_matrix = [[] for _ in range(dimensions)]
         self.available_start_points = OrderedDict()
@@ -41,7 +42,8 @@ class GeneratorBase:
             for col in range(dimensions):
                 temp_matrix[row].append("X")
                 self.available_start_points[(row, col)] = None
-                
+        
+        self.cw_matrix = temp_matrix
         self.words = words
         self.directions = ALL_DIRECTIONS
         self.un_added_words: List[str] = []

@@ -1,6 +1,6 @@
-from typing import List, Tuple,  Dict, Union, Optional, DefaultDict
+from typing import List, Tuple, Optional, DefaultDict
 from collections import defaultdict
-from cw_generator.cw_gen.cw_base_class import GeneratorBase, ALL_DIRECTIONS
+from cw_base_class import GeneratorBase, ALL_DIRECTIONS
 
 
 class Node:
@@ -116,3 +116,30 @@ class CWTreeGenerator(GeneratorBase):
                 self.place_tup(word, placement)
             else:
                 self.un_added_words.append(word)
+
+
+if __name__ == "__main__":
+    words = [
+        "istanbul",
+        "march",
+        "winchester",
+        "three",
+        "raymond",
+        "cardiff",
+        "twentythree",
+        "twentytwenty",
+        "byrnedafis",
+        "talgareg",
+        "dublin",
+        "oxford",
+        "rathsallagh",
+        "eryri",
+        "wicklow",
+    ]
+
+    cw_generator = CWTreeGenerator(words=words)
+    for line in cw_generator.cw_matrix:
+        print(line)
+    
+    print(cw_generator.words_by_locations)
+    print(len(words))
