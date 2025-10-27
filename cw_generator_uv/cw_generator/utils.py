@@ -1,9 +1,6 @@
-from typing import List, cast, Any
+from typing import List, cast
 import base64
 from ast import literal_eval
-from dynaconf import Dynaconf
-import requests
-from enum import Enum
 from cw_generator.custom_types import MATRIX_TYPE, SupportedCompression
 
 
@@ -16,7 +13,6 @@ def compress_matrix(cw_matrix: MATRIX_TYPE) -> bytes:
 def decompress(
     bytes_matrix: bytes, compression_func: SupportedCompression
 ) -> List[List[str]]:
-    default = [[]]
     match compression_func.value:
         case "base64":
             raw = literal_eval(base64.b64decode(bytes_matrix))
@@ -25,15 +21,14 @@ def decompress(
                 return raw
             else:
                 raise ValueError("Matrix was malformed")
-    return default
 
 
 def compress(matrix: MATRIX_TYPE, compression_func: SupportedCompression) -> bytes:
-    default = [[]]
+    # default = [[]]
     match compression_func.value:
         case "base64":
             return compress_matrix(matrix)
-    return default
+    # return default
 
 
 def calculate_direction(): ...

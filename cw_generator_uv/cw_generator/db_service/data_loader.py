@@ -1,6 +1,7 @@
 import requests
 from pathlib import Path
 
+
 URL = "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/refs/heads/master/dictionary_alpha_arrays.json"
 
 

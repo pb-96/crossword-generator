@@ -1,4 +1,4 @@
-from typing import List, Tuple, Set, cast
+from typing import Any, List, Tuple, Set, cast
 from cw_generator.custom_types import CanFit, ReplaceStrategy
 import re
 
