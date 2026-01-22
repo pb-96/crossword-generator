@@ -1,13 +1,14 @@
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import func, and_, Engine
 from schema import WordVectorStore, CWGeneric, WordsByLocation
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from cw_generator.custom_types import Config
-from typing import cast, Union, Dict, Tuple, List
+from typing import Union, Dict, List, cast, Tuple
 from cw_generator.utils import decompress, compress
 from cw_generator.custom_types import CWPoint
 from cw_generator.custom_types import (
     MATRIX_TYPE,
+    Point,
     SupportedCompression,
     WordByLocationDict,
 )
@@ -15,7 +16,7 @@ from uuid import uuid4, UUID
 
 
 def get_session(db_engine) -> Session:
-    return sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
+    return Session(autocommit=False, autoflush=False, bind=db_engine)
 
 
 def get_random_shuffle(db_engine: Engine, config_dict: Config, page: int = 1):
@@ -40,7 +41,7 @@ def get_random_shuffle(db_engine: Engine, config_dict: Config, page: int = 1):
         rows = query.limit(chunk).offset(offset).all()
 
         for row in rows:
-            row.last_used = func.now()
+            row.last_used = datetime.now(timezone.utc)
 
         session.commit()
         return rows
@@ -51,7 +52,7 @@ def get_today_crossword(db_engine: Engine, client_timestamp: Union[datetime, Non
             if client_timestamp is None:
                 client_timestamp = datetime.now()
 
-            today = datetime.date()
+            today = datetime.date(datetime.now(timezone.utc))
             # forward back comparison
             forward = today + timedelta(days=1)
             backward = today + timedelta(days=-1)
@@ -59,22 +60,26 @@ def get_today_crossword(db_engine: Engine, client_timestamp: Union[datetime, Non
             query = session.query(CWGeneric).filter(
                 and_(CWGeneric.generated_on < forward, CWGeneric.generated_on > backward)
             )
-            result: CWGeneric = query.first()
+            result: CWGeneric | None = query.first()
+            if result is None:
+                raise ValueError("No crossword found for today")
 
-            decompressed_matrix = decompress(result.cw_bytes, result.encoding_func)
+            decompressed_matrix = decompress(result.cw_bytes, SupportedCompression(result.encoding_func))
             related_words = (
                 session.query(WordsByLocation)
                 .filter(WordsByLocation.related_uuid == result.uuid)
                 .all()
             )
+
             words_and_descriptions: Dict[str, str] = {}
-            words_and_locations: Dict[str, Tuple[int, int]] = {}
+            words_and_locations: Dict[str, Point] = {}
 
             for row in related_words:
-                words_and_descriptions[row.word] = row.description
-                words_and_locations[row.word] = (
-                    row.location_tuple_start,
-                    row.location_tuple_end,
+                words_and_descriptions[str(row.word)] = str(row.description)
+                words_and_locations[str(row.word)] = Point(
+                    start=cast(Tuple[int, int], row.location_tuple_start),
+                    end=cast(Tuple[int, int], row.location_tuple_end),
+                    direction=None,
                 )
 
             return_type = CWPoint(
@@ -89,8 +94,8 @@ def get_today_crossword(db_engine: Engine, client_timestamp: Union[datetime, Non
 def create_cross_word_entry(
     db_engine: Engine,
     cw_matrix: MATRIX_TYPE,
-    words: Union[List[WordByLocationDict], List[WordVectorStore]],
-    cw_uuid: Union[str, UUID] = None,
+    words: List[WordByLocationDict],
+    cw_uuid: Union[str, UUID, None] = None,
     compress_func: SupportedCompression = SupportedCompression.base64,
 ):
     if cw_uuid is None:
@@ -101,7 +106,7 @@ def create_cross_word_entry(
     compressed_matrix = compress(cw_matrix, compress_func)
     try:
         with get_session(db_engine) as session:
-            if isinstance(words[0], WordByLocationDict):
+            if type(words[0]) == WordByLocationDict:
                 words_by_location = []
                 for element in words:
                     obj = WordsByLocation(

@@ -65,6 +65,8 @@ def check_can_fit_estimate(dim: int, words: List[str]) -> CanFit:
 
     if no_fit:
         count = 0
+        index = len(words) - 1
+        
         for index, word in enumerate(words):
             if count + len(word) > total_space:
                 break
@@ -93,7 +95,7 @@ def merge_strategy(can_fit: CanFit, words: List[str]) -> List[str]:
 
         if rolling_diff < 0:
             break
-
-    chosen = cast(list, word[can_fit["cut_off_index"] :])
+    
+    chosen = cast(list, words[can_fit["cut_off_index"] :])
     chosen.extend(extra_words)
     return chosen

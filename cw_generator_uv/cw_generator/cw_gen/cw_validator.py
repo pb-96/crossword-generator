@@ -68,7 +68,11 @@ class WordSearch:
     ) -> Union[Point, None]:
         built = search_word[ptr]
         while ptr < len(search_word) - 1:
-            next_char, next_point = self.peek_next(next_point, potential_positions)
+            T = self.peek_next(next_point, potential_positions)
+            if T is None:
+                return None
+                
+            next_char, next_point = T
             if next_char is None or next_char != search_word[ptr + 1]:
                 return None
             ptr += 1

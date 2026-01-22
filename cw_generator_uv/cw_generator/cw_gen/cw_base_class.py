@@ -14,7 +14,7 @@ class GeneratorBase:
     This class provides the core functionality for generating crossword puzzles,
     including word placement, matrix management, and random letter padding.
     """
-    __slots__ = ["cw_matrix"]  # Final matrix is immutable after initialization
+    
     
     def __init__(
         self, words: List[str], dimensions: int = 15, retry_un_added: bool = False

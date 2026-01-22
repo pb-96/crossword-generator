@@ -21,7 +21,7 @@ def generate_cw(to_place: List[str]) -> Tuple[WordByLocationDict, MATRIX_TYPE]:
 
     singular_list = [*singular_only_set]
 
-    can_fit = check_can_fit_estimate(singular_list)
+    can_fit = check_can_fit_estimate(15, singular_list)
     # Need to do an and check on the config to tell if this is wanted
     if can_fit["no_fit"]:
         singular_list = merge_strategy(can_fit, singular_list)

@@ -1,18 +1,17 @@
 from sqlalchemy import String, Column, Integer, ForeignKey
 from sqlalchemy.types import LargeBinary, DateTime, UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import ARRAY
 import datetime
+from typing import Optional, Tuple
 
 
 class WordsByLocation(DeclarativeBase):
-    related_uuid = (
-        Column("uuid", Integer, ForeignKey("CWGeneric.uuid"), nullable=False),
-    )
+    related_uuid = Column("uuid", Integer, ForeignKey("CWGeneric.uuid"), nullable=False)
     word = Column(String)
     # Demensions set to 2 to represent (int, int)
-    location_tuple_start = Column(ARRAY(Integer), as_tuple=True, demensions=2)
-    location_tuple_end = Column(ARRAY(Integer), as_tuple=True, demensions=2)
+    location_tuple_start: Mapped[Tuple[int, int]] = mapped_column(ARRAY(Integer), as_tuple=True, demensions=2)
+    location_tuple_end: Mapped[Tuple[int, int]] = mapped_column(ARRAY(Integer), as_tuple=True, demensions=2)
     description = Column(String)
 
 
@@ -20,17 +19,17 @@ class CWGeneric(DeclarativeBase):
     __tablename__ = "cw_generic"
     uuid = Column(UUID(as_uuid=True))
     generated_on = Column(DateTime(timezone=True), default=datetime.datetime.timestamp)
-    cw_bytes = Column(LargeBinary)
-    encoding_func: Mapped[str] = Column(String(128))
+    cw_bytes: Mapped[bytes] = mapped_column(LargeBinary)
+    encoding_func: Mapped[str] = mapped_column(String(128))
 
 
 class WordVectorStore(DeclarativeBase):
     __tablename__ = "word_vector_store"
-    word: Mapped[str] = Column(String(128 * 4))
-    description: Mapped[str] = Column(String(256 * 4), default=None)
-    embedding: Mapped[str] = Column(LargeBinary, nullable=True)
+    word: Mapped[str] = mapped_column(String(128 * 4))
+    description: Mapped[Optional[str]] = mapped_column(String(256 * 4), default=None)
+    embedding: Mapped[Optional[bytes]] = mapped_column(LargeBinary, nullable=True)
     # None here would be it was never used
-    last_used = Column(DateTime(timezone=True), default=None)
+    last_used: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(timezone=True), default=None)
 
 
 class User(DeclarativeBase):

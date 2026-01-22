@@ -1,0 +1,16 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": true,
+  "reportMissingModuleSource": true,
+  "reportGeneralTypeIssues": true,
+  "reportIncompatibleMethodOverride": true,
+  "reportReturnType": true,
+  "reportPossiblyUnboundVariable": true,
+  "reportCallIssue": true,
+  "reportArgumentType": true,
+  "reportOperatorIssue": true,
+  "reportIndexIssue": true
+}

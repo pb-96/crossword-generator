@@ -43,7 +43,7 @@ class CanFit(TypedDict):
 class Point(TypedDict):
     start: Tuple[int, int]
     end: Tuple[int, int]
-    direction: Tuple[int, int]
+    direction: Tuple[int, int] | None
 
 
 class CWPoint(BaseModel):

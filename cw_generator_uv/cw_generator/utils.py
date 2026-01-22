@@ -6,7 +6,7 @@ from cw_generator.custom_types import MATRIX_TYPE, SupportedCompression
 
 def compress_matrix(cw_matrix: MATRIX_TYPE) -> bytes:
     joined_matrix = "".join((" ".join(l) for l in cw_matrix))
-    compressed = base64.b64encode(joined_matrix)
+    compressed = base64.b64encode(joined_matrix.encode("utf-8"))
     return compressed
 
 
@@ -15,8 +15,8 @@ def decompress(
 ) -> List[List[str]]:
     match compression_func.value:
         case "base64":
-            raw = literal_eval(base64.b64decode(bytes_matrix))
-            if isinstance(raw, list) and len(list) > 0 and isinstance(raw[0], list):
+            raw = literal_eval(base64.b64decode(bytes_matrix).decode("utf-8"))
+            if isinstance(raw, list) and len(raw) > 0 and isinstance(raw[0], list):
                 raw = cast(MATRIX_TYPE, raw)
                 return raw
             else:

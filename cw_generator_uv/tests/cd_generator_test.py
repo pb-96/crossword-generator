@@ -1,10 +1,10 @@
 from typing import List
 import unittest
-from cw_generator.cw_gen.cw_generator import CrossWordGen
+
 from cw_generator.cw_gen.cw_validator import WordSearch
+from cw_generator.cw_gen.cw_gen_with_tree import CWTreeGenerator
 
-
-def alter_input(cw: CrossWordGen, in_place: List[str]) -> None:
+def alter_input(cw: CWTreeGenerator, in_place: List[str]) -> None:
     if cw.re_try_un_added and cw.un_added_words:
         in_place = [*set(cw.un_added_words).difference(set(in_place))]
 
@@ -23,7 +23,7 @@ class GeneratorTest(unittest.TestCase):
             "ruby",
         ]
 
-        cw: CrossWordGen = CrossWordGen(words=to_place)
+        cw: CWTreeGenerator = CWTreeGenerator(words=to_place)
         validator = WordSearch(puzzle=cw.cw_matrix)
         all_found = all((validator.search(word) for word in to_place))
         assert all_found

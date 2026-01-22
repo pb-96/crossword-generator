@@ -6,7 +6,7 @@ from dynaconf import settings
 
 
 def get_engine() -> Engine:
-    return create_engine(settings.database_url)
+    return create_engine(str(settings.database_url))
 
 
 def setup_tables(engine: Engine):
@@ -15,6 +15,8 @@ def setup_tables(engine: Engine):
 
 def check_tables_exists(engine: Engine):
     all_found = False
+    connection = None
+    
     try:
         tables_dicts = DeclarativeBase.metadata.tables
         tables_names_from_base = [table.name for table in tables_dicts.values()]
@@ -27,7 +29,8 @@ def check_tables_exists(engine: Engine):
         logging.error(f"Error checking tables: {e}")
         raise e
     finally:
-        connection.close()
+        if connection is not None:
+            connection.close()
         engine.dispose()
 
     return all_found
