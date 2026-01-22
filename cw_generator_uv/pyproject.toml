@@ -5,7 +5,6 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "dynaconf>=3.2.11",
     "fastapi>=0.115.12",
     "fastapi-sqlalchemy>=0.2.1",
     "pydantic>=2.11.4",
