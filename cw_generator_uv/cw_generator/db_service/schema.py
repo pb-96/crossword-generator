@@ -31,3 +31,13 @@ class WordVectorStore(DeclarativeBase):
     embedding: Mapped[str] = Column(LargeBinary, nullable=True)
     # None here would be it was never used
     last_used = Column(DateTime(timezone=True), default=None)
+
+
+class User(DeclarativeBase):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
+    username = Column(String(128), unique=True, nullable=False)
+    email = Column(String(128), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    created_at = Column(DateTime(timezone=True), default=datetime.datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=datetime.datetime.now)

@@ -1,9 +1,8 @@
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, Engine
 from schema import WordVectorStore, CWGeneric, WordsByLocation
 from datetime import datetime, timedelta
 from cw_generator.custom_types import Config
-from fastapi_sqlalchemy import db
 from typing import cast, Union, Dict, Tuple, List
 from cw_generator.utils import decompress, compress
 from cw_generator.custom_types import CWPoint
@@ -15,13 +14,12 @@ from cw_generator.custom_types import (
 from uuid import uuid4, UUID
 
 
-def get_session(db_engine):
+def get_session(db_engine) -> Session:
     return sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
 
-def get_random_shuffle(config_dict: Config, page: int = 1):
-    with db(commit_on_exit=True):
-        session = db.session
+def get_random_shuffle(db_engine: Engine, config_dict: Config, page: int = 1):
+    with get_session(db_engine) as session:
         if page < 0:
             page = 1
 
@@ -48,48 +46,48 @@ def get_random_shuffle(config_dict: Config, page: int = 1):
         return rows
 
 
-def get_today_crossword(client_timestamp: Union[datetime, None]) -> CWPoint:
-    with db():
-        session = cast(Session, db.session)
-        if client_timestamp is None:
-            client_timestamp = datetime.now()
+def get_today_crossword(db_engine: Engine, client_timestamp: Union[datetime, None]) -> CWPoint:
+        with get_session(db_engine) as session:
+            if client_timestamp is None:
+                client_timestamp = datetime.now()
 
-        today = datetime.date()
-        # forward back comparison
-        forward = today + timedelta(days=1)
-        backward = today + timedelta(days=-1)
+            today = datetime.date()
+            # forward back comparison
+            forward = today + timedelta(days=1)
+            backward = today + timedelta(days=-1)
 
-        query = session.query(CWGeneric).filter(
-            and_(CWGeneric.generated_on < forward, CWGeneric.generated_on > backward)
-        )
-        result: CWGeneric = query.first()
+            query = session.query(CWGeneric).filter(
+                and_(CWGeneric.generated_on < forward, CWGeneric.generated_on > backward)
+            )
+            result: CWGeneric = query.first()
 
-        decompressed_matrix = decompress(result.cw_bytes, result.encoding_func)
-        related_words = (
-            session.query(WordsByLocation)
-            .filter(WordsByLocation.related_uuid == result.uuid)
-            .all()
-        )
-        words_and_descriptions: Dict[str, str] = {}
-        words_and_locations: Dict[str, Tuple[int, int]] = {}
+            decompressed_matrix = decompress(result.cw_bytes, result.encoding_func)
+            related_words = (
+                session.query(WordsByLocation)
+                .filter(WordsByLocation.related_uuid == result.uuid)
+                .all()
+            )
+            words_and_descriptions: Dict[str, str] = {}
+            words_and_locations: Dict[str, Tuple[int, int]] = {}
 
-        for row in related_words:
-            words_and_descriptions[row.word] = row.description
-            words_and_locations[row.word] = (
-                row.location_tuple_start,
-                row.location_tuple_end,
+            for row in related_words:
+                words_and_descriptions[row.word] = row.description
+                words_and_locations[row.word] = (
+                    row.location_tuple_start,
+                    row.location_tuple_end,
+                )
+
+            return_type = CWPoint(
+                words_description=words_and_descriptions,
+                words_locations=words_and_locations,
+                cw_matrix=decompressed_matrix,
             )
 
-        return_type = CWPoint(
-            words_description=words_and_descriptions,
-            words_locations=words_and_locations,
-            cw_matrix=decompressed_matrix,
-        )
-
-        return return_type
+            return return_type
 
 
 def create_cross_word_entry(
+    db_engine: Engine,
     cw_matrix: MATRIX_TYPE,
     words: Union[List[WordByLocationDict], List[WordVectorStore]],
     cw_uuid: Union[str, UUID] = None,
@@ -102,8 +100,7 @@ def create_cross_word_entry(
 
     compressed_matrix = compress(cw_matrix, compress_func)
     try:
-        with db():
-            session = cast(Session, db.session)
+        with get_session(db_engine) as session:
             if isinstance(words[0], WordByLocationDict):
                 words_by_location = []
                 for element in words:
