@@ -6,12 +6,14 @@ class Point:
         self.x = x
         self.y = y
 
-    def __eq__(self, other: Union["Point", Tuple[int, int]]):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, tuple):
             assert len(other) == 2, "Tuple must represent a point"
             x, y = other
             return self.x == x and self.y == y
-        return self.x == other.x and self.y == other.y
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        return False
 
     def add_tuple(self, positions: Tuple[int, int]) -> "Point":
         row, col = positions
@@ -54,10 +56,10 @@ class WordSearch:
         new_point = s.add_tuple(potential_positions)
 
         if not self.valid_point(new_point):
-            return (None, None)
+            return None
 
         next_char = self.puzzle[new_point.y][new_point.x]
-        return next_char, new_point
+        return new_point, next_char
 
     def non_rec_dfs(
         self,
@@ -71,8 +73,8 @@ class WordSearch:
             T = self.peek_next(next_point, potential_positions)
             if T is None:
                 return None
-                
-            next_char, next_point = T
+
+            next_point, next_char = T
             if next_char is None or next_char != search_word[ptr + 1]:
                 return None
             ptr += 1
@@ -83,7 +85,10 @@ class WordSearch:
 
     def dfs(self, start_p: Point, search_word: str) -> Union[Point, None]:
         for potential_positions in self.search_points:
-            next_char, next_point = self.peek_next(start_p, potential_positions)
+            peek_result = self.peek_next(start_p, potential_positions)
+            if peek_result is None:
+                continue
+            next_point, next_char = peek_result
             if next_char == search_word[0]:
                 found = self.non_rec_dfs(
                     next_point, potential_positions, search_word, 0

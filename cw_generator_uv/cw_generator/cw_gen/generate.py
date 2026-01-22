@@ -1,16 +1,16 @@
 from cw_generator.cw_gen.cw_gen_with_tree import CWTreeGenerator
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from pre_validate_utils import (
     singular_only,
     all_words_are_unique,
     check_can_fit_estimate,
     merge_strategy,
 )
-from cw_generator.custom_types import WordByLocationDict, MATRIX_TYPE
+from cw_generator.custom_types import MATRIX_TYPE
 import logging
 
 
-def generate_cw(to_place: List[str]) -> Tuple[WordByLocationDict, MATRIX_TYPE]:
+def generate_cw(to_place: List[str]) -> Tuple[Dict[str, Dict[str, Tuple[int, int]]], MATRIX_TYPE]:
     unique, unique_set = all_words_are_unique(to_place)
     if not unique:
         raise ValueError("Words to place must be unique")

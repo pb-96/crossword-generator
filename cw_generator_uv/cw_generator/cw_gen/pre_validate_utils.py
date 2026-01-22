@@ -60,13 +60,13 @@ def check_can_fit_estimate(dim: int, words: List[str]) -> CanFit:
     total_chars = sum((len(word) for word in words))
 
     no_fit = total_space < total_chars
-    diff = (max(total_space, total_chars) - min(total_space, total_chars),)
+    diff = max(total_space, total_chars) - min(total_space, total_chars)
     cutoff_index = -1
 
     if no_fit:
         count = 0
         index = len(words) - 1
-        
+
         for index, word in enumerate(words):
             if count + len(word) > total_space:
                 break

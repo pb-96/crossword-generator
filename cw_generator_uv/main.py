@@ -32,7 +32,7 @@ if settings.create_db:
 def generate_crossword() -> bool:
     vector_words: List[models.WordVectorStore] = get_random_shuffle(db_engine=engine, config_dict=CONFIG_DICT, page=1)
     words_only: Dict[str, models.WordVectorStore] = {
-        vc_words.word: vector_words for vc_words in vector_words
+        vc_words.word: vc_words for vc_words in vector_words
     }
     words_by_location, cw_crossword = generate_cw([*words_only.keys()])
     unique_id = str(uuid4())
